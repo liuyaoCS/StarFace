@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.facepp.demo"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="12"
+        android:targetSdkVersion="22" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="StarFace"
+        android:theme="@style/AppTheme"
+         >
+        <activity
+            android:name=".MainActivity"
+            android:label="FaceppAndroidDemo"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".PickSearchActivity"
+            android:label="@string/title_activity_pick_search"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".FindSimiliarFaceActivity"
+            android:label="@string/title_activity_find_similiar_face" 
+            android:theme="@android:style/Theme.Light.NoTitleBar">
+        </activity>
+    </application>
+
+</manifest>
