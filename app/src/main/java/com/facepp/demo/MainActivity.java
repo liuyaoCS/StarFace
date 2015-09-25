@@ -1,6 +1,7 @@
 package com.facepp.demo;
 
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,9 +42,9 @@ import android.widget.TextView;
 public class MainActivity extends Activity implements OnClickListener{
 
 	
-	private ExecutorService service=Executors.newFixedThreadPool(3);//开发版并发限制数3
+	private ExecutorService service=Executors.newFixedThreadPool(5);//开发版并发限制数3
 	
-	Button create,detect,train,delete,deleteface,reset,pick,find;
+	Button create,detect,upload,train,delete,deleteface,reset,pick,find;
 	TextView status;
 	
     @Override
@@ -60,6 +61,10 @@ public class MainActivity extends Activity implements OnClickListener{
 		
 		detect=(Button) findViewById(R.id.detect);
 		detect.setOnClickListener(this);
+
+		upload=(Button) findViewById(R.id.upload);
+		upload.setOnClickListener(this);
+
 		
 		train=(Button) findViewById(R.id.train);
 		train.setOnClickListener(this);
@@ -94,6 +99,9 @@ public class MainActivity extends Activity implements OnClickListener{
 	            }
 	            service.shutdown();
 	    		break;
+			case R.id.upload:
+				new UploadTask().start();
+				break;
 	    	case R.id.train:
 	    		new TrainTask().start();
 	    		break;
@@ -243,11 +251,19 @@ public class MainActivity extends Activity implements OnClickListener{
 					for(String star:Config.STARS){
 						JSONObject ret=httpRequests.personGetInfo(new PostParameters().setPersonName(star));
 						JSONArray array=ret.getJSONArray("face");
+						StringBuilder face_ids=new StringBuilder();
 						for(int i=0;i<array.length();i++){
 							String face_id=array.getJSONObject(i).getString("face_id");
-							JSONObject addret=httpRequests.facesetAddFace(new PostParameters().setFacesetName(Config.FACESET_NAME).setFaceId(face_id));
-							Log.i(Config.TAG, star+addret.toString());
+							if(i!=array.length()-1){
+								face_ids.append(array.getJSONObject(i).getString("face_id")+",");
+							}else{
+								face_ids.append(array.getJSONObject(i).getString("face_id"));
+							}
+//							JSONObject addret=httpRequests.facesetAddFace(new PostParameters().setFacesetName(Config.FACESET_NAME).setFaceId(face_id));
+//							Log.i(Config.TAG, star+addret.toString());
 						}
+						JSONObject addret=httpRequests.facesetAddFace(new PostParameters().setFacesetName(Config.FACESET_NAME).setFaceId(face_ids.toString()));
+						Log.i(Config.TAG, star+addret.toString());
 					}
 
 					
@@ -299,6 +315,65 @@ public class MainActivity extends Activity implements OnClickListener{
 		 }
     
     }
+	class UploadTask extends Thread{
+		@Override
+		public void run() {
+
+			//begin face++
+			setText("status:upload urls");
+			HttpRequests httpRequests = new HttpRequests(Config.APP_KEY, Config.APP_SECRET, true, true);
+
+			HttpClient uploadClient=new DefaultHttpClient();
+			HttpGet uploadGet=null;
+			HttpResponse response=null;
+
+			try {
+
+				Charset.forName("UTF-8").name();
+
+				JSONObject faces=httpRequests.facesetGetInfo(new PostParameters().setFacesetName(Config.FACESET_NAME));
+				JSONArray faceArray=faces.getJSONArray("face");
+				for(int i=0;i<faceArray.length();i++){
+					int total=faceArray.length();
+					String face_id=faceArray.getJSONObject(i).getString("face_id");
+					JSONObject faceInfo=httpRequests.infoGetFace(new PostParameters().setFaceId(face_id));
+					JSONArray faceInfo_array = faceInfo.getJSONArray("face_info");
+					for(int j=0;j<faceInfo_array.length();j++) {
+						final String url = faceInfo_array.getJSONObject(j).getString("url");
+						//setText("status:upload url=" + url);
+						//Log.i(Config.TAG, "url=" + url);
+
+						uploadGet=new HttpGet(Config.UPLOAD_URL+url);
+						try {
+							response=uploadClient.execute(uploadGet);
+							if(response.getStatusLine().getStatusCode()==HttpStatus.SC_OK){
+                                setText("status:upload "+i+"/"+total+" success url=" + url);
+                                Log.i(Config.TAG, "success url=" + url);
+                            }else{
+                                setText("status:upload "+i+"/"+total+" error url=" + url);
+                                Log.e(Config.TAG, "error url=" + url);
+                            }
+						} catch (IOException e) {
+							setText("status:upload mob error\n"+e.toString());
+							e.printStackTrace();
+							continue;
+						}
+					}
+				}
+
+
+				Log.i(Config.TAG, "uploaded");
+				setText("status:task done!");
+
+
+			} catch(Exception e) {
+				e.printStackTrace();
+				setText("status:upload error\n"+e.toString());
+			}
+
+		}
+
+	}
     class DetectTask extends Thread{
     	String mStarName;
     	public DetectTask(String name){

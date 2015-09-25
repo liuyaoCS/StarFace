@@ -2,53 +2,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
+
     android:keepScreenOn="true">
 
-    <Button android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="create faceset,group"
-        android:id="@+id/create"/>
-    <Button android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="upload,detect"
-        android:id="@+id/detect"/>
-    <Button android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="train faceset"
-        android:id="@+id/train"/>
-    <Button android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="delete person,faceset,group"
-        android:id="@+id/delete"/>
-    
-     <Button android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="delete certain face"
-        android:layout_marginTop="30dp"
-        android:id="@+id/deleteface"/>
-     <Button android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="reset faceset"
-        android:id="@+id/reset"/>
-    
-    <Button android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="find face"
-        android:id="@+id/pick"/>
-    
-    <Button android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="find similiar stars"
-        android:id="@+id/find"/>
-    
-    <TextView android:id="@+id/status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="status:"
-        />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+            <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="create faceset,group"
+                android:id="@+id/create"/>
+            <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="upload,detect"
+                android:id="@+id/detect"/>
+            <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="upload urls to mob"
+                android:id="@+id/upload"/>
+            <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="train faceset"
+                android:id="@+id/train"/>
+            <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="delete person,faceset,group"
+                android:id="@+id/delete"/>
+
+            <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="delete certain face"
+                android:layout_marginTop="20dp"
+                android:id="@+id/deleteface"/>
+            <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="reset faceset"
+                android:id="@+id/reset"/>
+
+            <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="find face"
+                android:id="@+id/pick"/>
+
+            <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="find similiar stars"
+                android:id="@+id/find"/>
+
+            <TextView android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="status:"
+                />
+        </LinearLayout>
+    </ScrollView>
+
     
 
 </LinearLayout>
