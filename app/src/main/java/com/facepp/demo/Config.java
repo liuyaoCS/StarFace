@@ -1,9 +1,17 @@
 package com.facepp.demo;
 
+import java.util.ArrayList;
+
 public class Config {
+	//手机国搜应用
 	public static final String APP_KEY="43d7eac4eff8fe62d22b139d6f02828e";
 	public static final String APP_SECRET="14bIP7lF0Y-Bgtw4DzLQhw1vKSe2U7bA";
-	public static final String FACESET_NAME="faceset_star"; 
+	//明星脸应用
+//	public static final String APP_KEY="67ec4a2fb8380a00732bf7df7fe31b90";
+//	public static final String APP_SECRET="kly8oYMagAzAXYdVPYnhPljVMEgsOHZq";
+
+	public static final String FACESET_NAME="faceset_star";
+	public static final String FACESET_NAME_TMP="faceset_star_tmp";
 	public static final String FACESET_DETECT="faceset_detect"; 
 	public static final String GROUP_NAME="group_star";
 	
@@ -12,10 +20,11 @@ public class Config {
 	
 	public static final String TAG="FACEPP";
 	public static final String[] FACES_DELETED=new String[]{
-		"5bb57042d7c657c3b7ea1840fe4cf115",
-		
+			"b7ff88c90d90d9cf89adf3db3f67d094"
 	};
+	public static final String[] TOADD=new String[]{
 
+	};
 	public static final String[] STARS=new String[]{
 		"李易峰",
 		"成龙",
@@ -127,7 +136,6 @@ public class Config {
 		"佟丽娅",
 		"林心如",
 		"章子怡",
-		"李小璐",
 		"陈乔恩",
 		"黄圣依",
 		"蔡依林",
@@ -215,6 +223,55 @@ public class Config {
 		"刘惜君",
 		"徐熙媛",
 		"郑秀文",
-		"赵子琪"
+		"赵子琪",
+		"米兰·达可儿",
+		"艾玛·沃特森",
+		"伊娃·格林",
+		"奥黛丽·赫本",
+		"泰勒·斯威夫特",
+		"阿曼达·塞弗里德",
+		"达科塔·范宁",
+		"卡拉·迪瓦伊",
+		"夏奇拉",
+		"玛丽莲·梦露",
+		"罗伯特·帕丁森",
+		"布拉德·皮特",
+		"约翰·尼德普",
+		"迈克尔·杰克逊",
+		"汤姆·克鲁斯",
+		"范·迪塞尔",
+		"小罗伯特·唐尼",
+		"马特·达蒙",
+		"习近平",
+		"周锡生",
+		"安倍晋三",
+		"奥巴马",
+		"普京",
+		"默克尔",
+		"卡梅伦",
+		"萨科齐",
+		"卡斯特罗",
+		"金正恩",
+		"朴槿惠",
+		"哈洛宁",
+		"内贾德",
+		"卢卡申科",
+		"泽曼",
+		"查希亚·额勒贝格道尔吉",
+		"祖马",
+		"卡比拉",
+		"吴登盛",
+		"巴希尔",
+		"卡里莫夫",
+		"海尔马里亚姆·德萨莱尼",
+		"塞西",
+		"朱马里",
+		"侯赛因",
+		"尼科利奇",
+		"拉赫蒙",
+		"马杜罗",
+		"基尔曼",
+		"巴威"
 	};
+
 }

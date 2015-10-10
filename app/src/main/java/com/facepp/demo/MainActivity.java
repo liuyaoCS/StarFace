@@ -4,7 +4,6 @@ package com.facepp.demo;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.facepp.error.FaceppParseException;
 import com.facepp.http.HttpRequests;
 import com.facepp.http.PostParameters;
 
@@ -25,7 +25,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.TextureView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -42,10 +41,14 @@ import android.widget.TextView;
 public class MainActivity extends Activity implements OnClickListener{
 
 	
-	private ExecutorService service=Executors.newFixedThreadPool(5);//开发版并发限制数3
+	private ExecutorService service=Executors.newFixedThreadPool(8);//开发版并发限制数3
 	
-	Button create,detect,upload,train,delete,deleteface,reset,pick,find;
+	Button create,detect,upload,train,delete,get_size,change_name,deleteface,reset,pick,find;
 	TextView status;
+
+	//添加人时替换
+	private String[] ADD_CHANGE_PERSON_SET =Config.TOADD; //Config.STARS;
+	private int ADD_CHANGE_FACESET_INIT_INDEX=7100;        //0 8415
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,13 @@ public class MainActivity extends Activity implements OnClickListener{
 		
 		delete=(Button) findViewById(R.id.delete);
 		delete.setOnClickListener(this);
+
+
+		get_size=(Button) findViewById(R.id.get_size);
+		get_size.setOnClickListener(this);
+
+		change_name=(Button) findViewById(R.id.change_name);
+		change_name.setOnClickListener(this);
 		
 		deleteface=(Button) findViewById(R.id.deleteface);
 		deleteface.setOnClickListener(this);
@@ -94,7 +104,7 @@ public class MainActivity extends Activity implements OnClickListener{
 	    		new CreateTask().start();
 	    		break;
 	    	case R.id.detect:
-	    		for(String star:Config.STARS){
+	    		for(String star: ADD_CHANGE_PERSON_SET){
 	            	service.submit(new DetectTask(star));
 	            }
 	            service.shutdown();
@@ -108,6 +118,12 @@ public class MainActivity extends Activity implements OnClickListener{
 	    	case R.id.delete:
 	    		new DeleteTask().start();
 	    		break;
+			case R.id.get_size:
+				new GetInfoTask().start();
+				break;
+			case R.id.change_name:
+				new ChangNameTask().start();
+				break;
 	    	case R.id.deleteface:
 	    		new DeleteFaceTask().start();
 	    		break;
@@ -207,6 +223,76 @@ public class MainActivity extends Activity implements OnClickListener{
 		 }
   
     }
+	class GetInfoTask extends Thread{
+		@Override
+		public void run() {
+
+			//begin face++
+			setText("status:getting faces num...");
+			HttpRequests httpRequests = new HttpRequests(Config.APP_KEY, Config.APP_SECRET, true, true);
+			try {
+
+				Charset.forName("UTF-8").name();
+				int total=0;
+				JSONObject faces=httpRequests.facesetGetInfo(new PostParameters().setFacesetName(Config.FACESET_NAME));
+				JSONArray faceArray=faces.getJSONArray("face");
+
+				total=faceArray.length();
+
+				Log.i(Config.TAG, "get info");
+				setText("status:faceset size= "+total);
+			} catch(Exception e) {
+				e.printStackTrace();
+				setText("status:get info error\n"+e.toString());
+			}
+
+		}
+
+	}
+	class ChangNameTask extends Thread{
+		@Override
+		public void run() {
+
+			//begin face++
+			setText("status:change name...");
+
+			HttpRequests httpRequests = new HttpRequests(Config.APP_KEY, Config.APP_SECRET, true, true);
+			try {
+
+				Charset.forName("UTF-8").name();
+
+				httpRequests.personSetInfo(new PostParameters().setPersonName("米兰达可儿").setName("米兰·达可儿"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("艾玛沃特森").setName("艾玛·沃特森"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("伊娃格林").setName("伊娃·格林"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("奥黛丽赫本").setName("奥黛丽·赫本"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("斯威夫特").setName("泰勒·斯威夫特"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("塞弗里德").setName("阿曼达·塞弗里德"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("达科塔范宁").setName("达科塔·范宁"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("卡拉迪瓦伊").setName("卡拉·迪瓦伊"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("玛丽莲梦露").setName("玛丽莲·梦露"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("罗伯特帕丁森").setName("罗伯特·帕丁森"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("布拉德皮特").setName("布拉德·皮特"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("约翰尼德普").setName("约翰·尼德普"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("迈克尔杰克逊").setName("迈克尔·杰克逊"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("汤姆克鲁斯").setName("汤姆·克鲁斯"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("范迪塞尔").setName("范·迪塞尔"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("小罗伯特唐尼").setName("小罗伯特·唐尼"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("马特达蒙").setName("马特·达蒙"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("额勒贝格道尔吉").setName("查希亚·额勒贝格道尔吉"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("海尔马里亚姆").setName("海尔马里亚姆·德萨莱尼"));
+				httpRequests.personSetInfo(new PostParameters().setPersonName("小罗伯特唐尼").setName("小罗伯特·唐尼"));
+
+
+				Log.i(Config.TAG, "change name");
+				setText("status:name changed");
+			} catch(Exception e) {
+				e.printStackTrace();
+				setText("status:change name error\n"+e.toString());
+			}
+
+		}
+
+	}
     class DeleteFaceTask extends Thread{
 		 @Override
 		 public void run() {
@@ -242,10 +328,10 @@ public class MainActivity extends Activity implements OnClickListener{
 				try {
 					
 					Charset.forName("UTF-8").name();
-					httpRequests.facesetDelete(new PostParameters().setFacesetName(Config.FACESET_NAME));
-					setText("status:creating faceset");
-					httpRequests.facesetCreate(new PostParameters().setFacesetName(Config.FACESET_NAME));
-					httpRequests.facesetSetInfo(new PostParameters().setFacesetName(Config.FACESET_NAME).setTag(Config.FACESET_NAME));
+					//httpRequests.facesetDelete(new PostParameters().setFacesetName(Config.FACESET_NAME_TMP));
+					setText("status:creating faceset tmp");
+					httpRequests.facesetCreate(new PostParameters().setFacesetName(Config.FACESET_NAME_TMP));
+					httpRequests.facesetSetInfo(new PostParameters().setFacesetName(Config.FACESET_NAME_TMP).setTag(Config.FACESET_NAME));
 					
 					setText("status:adding faces... ");
 					for(String star:Config.STARS){
@@ -262,9 +348,18 @@ public class MainActivity extends Activity implements OnClickListener{
 //							JSONObject addret=httpRequests.facesetAddFace(new PostParameters().setFacesetName(Config.FACESET_NAME).setFaceId(face_id));
 //							Log.i(Config.TAG, star+addret.toString());
 						}
-						JSONObject addret=httpRequests.facesetAddFace(new PostParameters().setFacesetName(Config.FACESET_NAME).setFaceId(face_ids.toString()));
-						Log.i(Config.TAG, star+addret.toString());
+						try {
+							JSONObject addret=httpRequests.facesetAddFace(new PostParameters().setFacesetName(Config.FACESET_NAME_TMP).setFaceId(face_ids.toString()));
+							Log.i(Config.TAG, star+addret.toString());
+						} catch (FaceppParseException e) {
+							e.printStackTrace();
+							setText("status:add face error at " + star+"\n" + e.toString());
+						}
 					}
+					setText("status:deleting faceset old... ");
+					httpRequests.facesetDelete(new PostParameters().setFacesetName(Config.FACESET_NAME));
+					setText("status:rename faceset tmp... ");
+					httpRequests.facesetSetInfo(new PostParameters().setFacesetName(Config.FACESET_NAME_TMP).setName(Config.FACESET_NAME));
 
 					
 					Log.i(Config.TAG, "done!");
@@ -333,7 +428,7 @@ public class MainActivity extends Activity implements OnClickListener{
 
 				JSONObject faces=httpRequests.facesetGetInfo(new PostParameters().setFacesetName(Config.FACESET_NAME));
 				JSONArray faceArray=faces.getJSONArray("face");
-				for(int i=0;i<faceArray.length();i++){
+				for(int i=ADD_CHANGE_FACESET_INIT_INDEX;i<faceArray.length();i++){
 					int total=faceArray.length();
 					String face_id=faceArray.getJSONObject(i).getString("face_id");
 					JSONObject faceInfo=httpRequests.infoGetFace(new PostParameters().setFaceId(face_id));
@@ -430,7 +525,7 @@ public class MainActivity extends Activity implements OnClickListener{
 					
 					Charset.forName("UTF-8").name();
 					
-					//create person	and faceset			
+					//create person
 					httpRequests.personCreate(new PostParameters().setPersonName(mStarName));
 					httpRequests.personSetInfo(new PostParameters().setPersonName(mStarName).setTag(mStarName));
 					httpRequests.groupAddPerson(new PostParameters().setGroupName(Config.GROUP_NAME).setPersonName(mStarName));
